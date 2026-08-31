@@ -13,6 +13,7 @@
 | Provider choice | Supports OpenAI, Azure-compatible gateways, local servers, and other providers exposing the OpenAI chat-completions contract. |
 | Settings | All AI options are under Binary Ninja Settings → Advanced Search. |
 | Navigation | Double-click any result to navigate to the function address. |
+| Sidebar | Dockable right-sidebar panel with one context per active BinaryView. |
 
 ## Installation
 
@@ -31,13 +32,13 @@ advanced-search/
 
 ## Usage
 
-Open a binary and choose **Plugins → Advanced Search → Search…**. Select one or more categories, optionally enter a free-form query, and press **Search**. The default selection emphasizes purchase, networking, and credential-access indicators; clear or change the selection for a different investigation.
+Open a binary and select the **Advanced Search** icon in Binary Ninja’s sidebar. The panel is created for the active BinaryView, so it searches the binary already open in the current analysis tab. Select one or more categories, optionally enter a free-form query, and press **Search active binary**. The default selection emphasizes purchase, networking, and credential-access indicators; clear or change the selection for a different investigation.
 
 Choose **AI-assisted search** only after configuring a provider. AI mode is intended for semantic matching over the local evidence summary; it does not automatically decompile the whole binary or modify analysis metadata. Results are restricted to functions present in the summary, which prevents the model from creating arbitrary addresses.
 
 ## Configuration
 
-The plugin registers these settings:
+The plugin registers these settings. The sidebar itself does not need a separate enable switch; after restarting Binary Ninja, its **A** icon should appear in the sidebar when a BinaryView is open:
 
 | Setting | Default | Purpose |
 |---|---:|---|
