@@ -5,7 +5,7 @@
   "api": ["python3"],
   "description": "Search functions by behavior category",
   "longdescription": "Provides deterministic category searches for purchase, credential access, networking, file activity, execution, persistence, surveillance, cryptography, and anti-analysis behaviors. Optional AI mode sends only a bounded function summary to a configurable OpenAI-compatible chat completions endpoint.",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "Manus AI",
   "license": {"name": "MIT", "text": "MIT License\n\nCopyright (c) 2026 Manus AI\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files, to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software."},
   "platforms": ["Linux", "Windows", "Darwin"],

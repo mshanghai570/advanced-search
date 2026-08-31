@@ -1,6 +1,7 @@
 """Binary Ninja behavior-category feature search plugin."""
 from __future__ import annotations
 
+import json
 import threading
 from typing import Any
 
@@ -32,7 +33,8 @@ def register_settings() -> Settings:
         "ai.max_functions": ("Maximum functions sent", "number", 250, "Caps the local function summary sent to the provider."),
     }
     for suffix, (title, kind, default, description) in specs.items():
-        settings.register_setting(f"{SETTINGS_PREFIX}.{suffix}", {"title": title, "type": kind, "default": default, "description": description})
+        properties = {"title": title, "type": kind, "default": default, "description": description, "ignore": ["SettingsProjectScope", "SettingsResourceScope"]}
+        settings.register_setting(f"{SETTINGS_PREFIX}.{suffix}", json.dumps(properties))
     return settings
 
 SETTINGS = register_settings()
