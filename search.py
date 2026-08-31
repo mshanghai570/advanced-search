@@ -56,7 +56,7 @@ def _disassembly_line_text(line: Any) -> str:
     return _text(line)
 
 
-def _function_evidence(function: Any) -> tuple[str, list[str]]:
+def _function_evidence(function: Any, include_disassembly: bool = False) -> tuple[str, list[str]]:
     chunks: list[str] = []
     names: list[str] = []
     for attr in ("name", "symbol"):
@@ -66,13 +66,14 @@ def _function_evidence(function: Any) -> tuple[str, list[str]]:
             chunks.append(_text(value))
     for string in getattr(function, "strings", []) or []:
         chunks.append(_text(getattr(string, "value", string)))
-    for block in getattr(function, "basic_blocks", []) or []:
-        for insn in getattr(block, "disassembly_text", []) or []:
-            chunks.append(_disassembly_line_text(insn))
+    if include_disassembly:
+        for block in getattr(function, "basic_blocks", []) or []:
+            for insn in getattr(block, "disassembly_text", []) or []:
+                chunks.append(_disassembly_line_text(insn))
     return " ".join(chunks).lower(), names
 
 
-def search_view(bv: Any, category_keys: Iterable[str], query: str = "", limit: int = 100) -> list[FeatureHit]:
+def search_view(bv: Any, category_keys: Iterable[str], query: str = "", limit: int = 100, include_disassembly: bool = False) -> list[FeatureHit]:
     """Search functions and their visible evidence without requiring a third-party dependency."""
     selected = [CATEGORIES[k] for k in category_keys if k in CATEGORIES]
     if not selected:
@@ -80,7 +81,7 @@ def search_view(bv: Any, category_keys: Iterable[str], query: str = "", limit: i
     query_l = query.strip().lower()
     hits: list[FeatureHit] = []
     for function in getattr(bv, "functions", []) or []:
-        evidence, names = _function_evidence(function)
+        evidence, names = _function_evidence(function, include_disassembly)
         if query_l and query_l not in evidence:
             continue
         for category in selected:
@@ -105,10 +106,10 @@ def categories_for_prompt() -> str:
     return "\n".join(f"- {key}: {value.name} — {value.description}" for key, value in CATEGORIES.items())
 
 
-def compact_view_summary(bv: Any, max_functions: int = 250) -> list[dict[str, Any]]:
+def compact_view_summary(bv: Any, max_functions: int = 250, include_disassembly: bool = False) -> list[dict[str, Any]]:
     rows = []
     for function in (getattr(bv, "functions", []) or [])[:max_functions]:
-        evidence, names = _function_evidence(function)
+        evidence, names = _function_evidence(function, include_disassembly)
         addr = getattr(function, "start", getattr(function, "address", 0))
         rows.append({"name": names[0] if names else "sub_" + format(int(addr), "x"), "address": int(addr), "evidence": evidence[:1200]})
     return rows

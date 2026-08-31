@@ -45,7 +45,7 @@ try:
                                SidebarWidgetLocation, SidebarWidgetType)
     from PySide6.QtCore import QRectF, Qt, Signal
     from PySide6.QtGui import QColor, QFont, QImage, QPainter
-    from PySide6.QtWidgets import (QComboBox, QHBoxLayout, QLabel, QLineEdit, QListWidget,
+    from PySide6.QtWidgets import (QCheckBox, QComboBox, QHBoxLayout, QLabel, QLineEdit, QListWidget,
                                    QListWidgetItem, QPushButton, QTableWidget, QTableWidgetItem,
                                    QVBoxLayout)
     UI_AVAILABLE = True
@@ -83,6 +83,9 @@ if UI_AVAILABLE:
             self.mode = QComboBox()
             self.mode.addItems(["Local category search", "AI-assisted search"])
             layout.addWidget(self.mode)
+            self.deep_scan = QCheckBox("Include instruction scan (slower)")
+            self.deep_scan.setToolTip("Enable only when names and strings are insufficient; this reads basic-block disassembly.")
+            layout.addWidget(self.deep_scan)
             self.categories = QListWidget()
             self.categories.setSelectionMode(QListWidget.MultiSelection)
             for key, category in CATEGORIES.items():
@@ -128,11 +131,12 @@ if UI_AVAILABLE:
             if self.mode.currentIndex() == 1:
                 threading.Thread(target=self._run_ai, args=(query,), daemon=True).start()
             else:
-                threading.Thread(target=self._run_local, args=(keys, query), daemon=True).start()
+                include_disassembly = self.deep_scan.isChecked()
+                threading.Thread(target=self._run_local, args=(keys, query, include_disassembly), daemon=True).start()
 
-        def _run_local(self, keys, query):
+        def _run_local(self, keys, query, include_disassembly=False):
             try:
-                self.results_ready.emit(search_view(self.data, keys, query), None)
+                self.results_ready.emit(search_view(self.data, keys, query, limit=100, include_disassembly=include_disassembly), None)
             except Exception as exc:
                 self.results_ready.emit([], str(exc))
 
@@ -146,9 +150,11 @@ if UI_AVAILABLE:
 
         def _render_results(self, results, error):
             self.search_button.setEnabled(True)
+            self.table.setUpdatesEnabled(False)
             self.table.setRowCount(0)
             if error:
                 self.status.setText(f"Search failed: {error}")
+                self.table.setUpdatesEnabled(True)
                 return
             for result in results:
                 row = self.table.rowCount()
@@ -163,6 +169,7 @@ if UI_AVAILABLE:
                 self.table.setVerticalHeaderItem(row, QTableWidgetItem(str(address)))
                 for column, value in enumerate(values):
                     self.table.setItem(row, column, QTableWidgetItem(value))
+            self.table.setUpdatesEnabled(True)
             self.table.resizeColumnsToContents()
             self.status.setText(f"{len(results)} result(s). Double-click a row to navigate.")
 
