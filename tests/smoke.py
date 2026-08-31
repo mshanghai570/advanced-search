@@ -3,7 +3,7 @@ import sys
 from types import SimpleNamespace
 
 # Load search.py directly so the test does not need Binary Ninja installed.
-spec = importlib.util.spec_from_file_location("bn_feature_search.search", "bn_feature_search/search.py")
+spec = importlib.util.spec_from_file_location("bn_feature_search.search", "search.py")
 search = importlib.util.module_from_spec(spec)
 sys.modules[spec.name] = search
 spec.loader.exec_module(search)

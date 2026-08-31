@@ -2,7 +2,7 @@ import sys
 from types import SimpleNamespace
 
 sys.path.insert(0, ".")
-from bn_feature_search.search import CATEGORIES, search_view
+from search import CATEGORIES, search_view
 
 
 def function(name, strings, address):

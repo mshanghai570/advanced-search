@@ -16,7 +16,7 @@
 
 ## Installation
 
-Copy the `bn_feature_search` directory and `plugin.json` into a Binary Ninja plugin directory. The exact directory is available from **Binary Ninja → Settings → Plugins → Open Plugin Folder**. Restart Binary Ninja, or reload the module from the Python console during development.
+Copy this repository folder, including the top-level `__init__.py` and `plugin.json`, into a Binary Ninja plugin directory. The exact directory is available from **Binary Ninja → Settings → Plugins → Open Plugin Folder**. Restart Binary Ninja, or reload the module from the Python console during development.
 
 For a local checkout, the plugin directory is the repository root:
 
@@ -24,10 +24,9 @@ For a local checkout, the plugin directory is the repository root:
 advanced-search/
 ├── plugin.json
 ├── README.md
-└── bn_feature_search/
-    ├── __init__.py
-    ├── ai.py
-    └── search.py
+├── __init__.py
+├── ai.py
+└── search.py
 ```
 
 ## Usage
@@ -60,7 +59,7 @@ A provider rooted at `http://127.0.0.1:1234/v1` with model `local-model` can be 
 The implementation intentionally uses only the Python standard library for HTTP requests. Binary Ninja itself supplies the `binaryninja` and `binaryninjaui` modules. For headless checks outside Binary Ninja, compile the source files with:
 
 ```bash
-python3 -m py_compile bn_feature_search/search.py bn_feature_search/ai.py bn_feature_search/__init__.py
+python3 -m py_compile ./search.py ./ai.py ./__init__.py
 ```
 
 For hot reload during plugin development, use the Binary Ninja Python console:

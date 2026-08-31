@@ -1,14 +1,15 @@
 {
   "pluginmetadataversion": 2,
   "name": "Advanced Search",
-  "type": "ui",
+  "type": ["ui"],
   "api": ["python3"],
-  "description": "Search Binary Ninja functions by behavior category with optional OpenAI-compatible AI assistance.",
+  "description": "Search functions by behavior category",
   "longdescription": "Provides deterministic category searches for purchase, credential access, networking, file activity, execution, persistence, surveillance, cryptography, and anti-analysis behaviors. Optional AI mode sends only a bounded function summary to a configurable OpenAI-compatible chat completions endpoint.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Manus AI",
-  "license": "MIT",
-  "platforms": ["Linux", "Windows", "macOS"],
-  "minimumbinaryninjaversion": "4.0.0",
-  "dependencies": []
+  "license": {"name": "MIT", "text": "MIT License\n\nCopyright (c) 2026 Manus AI\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files, to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software."},
+  "platforms": ["Linux", "Windows", "Darwin"],
+  "installinstructions": {"Linux": "Copy this repository folder into ~/.binaryninja/plugins/.", "Windows": "Copy this repository folder into %APPDATA%\\Binary Ninja\\plugins\\.", "Darwin": "Copy this repository folder into ~/Library/Application Support/Binary Ninja/plugins/."},
+  "dependencies": {},
+  "minimumbinaryninjaversion": 0
 }
