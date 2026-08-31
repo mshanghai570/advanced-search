@@ -1,0 +1,14 @@
+{
+  "pluginmetadataversion": 2,
+  "name": "Advanced Search",
+  "type": "ui",
+  "api": ["python3"],
+  "description": "Search Binary Ninja functions by behavior category with optional OpenAI-compatible AI assistance.",
+  "longdescription": "Provides deterministic category searches for purchase, credential access, networking, file activity, execution, persistence, surveillance, cryptography, and anti-analysis behaviors. Optional AI mode sends only a bounded function summary to a configurable OpenAI-compatible chat completions endpoint.",
+  "version": "1.0.0",
+  "author": "Manus AI",
+  "license": "MIT",
+  "platforms": ["Linux", "Windows", "macOS"],
+  "minimumbinaryninjaversion": "4.0.0",
+  "dependencies": []
+}
