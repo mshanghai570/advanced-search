@@ -27,7 +27,8 @@ advanced-search/
 ├── README.md
 ├── __init__.py
 ├── ai.py
-└── search.py
+├── search.py
+└── advanced_search_api.py
 ```
 
 ## Usage
@@ -60,7 +61,7 @@ A provider rooted at `http://127.0.0.1:1234/v1` with model `local-model` can be 
 The implementation intentionally uses only the Python standard library for HTTP requests. Binary Ninja itself supplies the `binaryninja` and `binaryninjaui` modules. For headless checks outside Binary Ninja, compile the source files with:
 
 ```bash
-python3 -m py_compile ./search.py ./ai.py ./__init__.py
+python3 -m py_compile ./search.py ./ai.py ./advanced_search_api.py ./__init__.py
 ```
 
 For hot reload during plugin development, use the Binary Ninja Python console:
@@ -70,6 +71,12 @@ import importlib
 import bn_feature_search
 importlib.reload(bn_feature_search)
 ```
+
+## Integration API
+
+`advanced_search_api.py` is a dependency-light integration boundary for other Binary Ninja plugins. It exposes `available_categories()` and `search_binary_view(bv, categories, query, limit, include_disassembly)`, returning the existing `FeatureHit` objects used by the standalone UI. The API performs deterministic, local analysis only and imports no Binary Ninja UI modules. Rikugan loads it optionally at runtime, so Advanced Search remains fully functional when Rikugan is absent.
+
+Install both plugin folders in the same Binary Ninja plugin directory. Rikugan’s Binary Ninja registry then exposes the `advanced_search` agent tool when `advanced_search_api.py` is importable. The standalone sidebar and its optional AI mode are unchanged.
 
 ## Limitations
 
