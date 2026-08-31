@@ -11,7 +11,11 @@ spec.loader.exec_module(search)
 def fn(name, strings, address):
     return SimpleNamespace(name=name, start=address, strings=[SimpleNamespace(value=s) for s in strings], basic_blocks=[])
 
-bv = SimpleNamespace(functions=[fn("checkout_order", ["https://shop.example/checkout", "payment"], 0x1000), fn("local", ["read file"], 0x2000)])
+line = SimpleNamespace(text="call payment_processor")
+block = SimpleNamespace(disassembly_text=[line])
+checkout = fn("checkout_order", ["https://shop.example/checkout", "payment"], 0x1000)
+checkout.basic_blocks = [block]
+bv = SimpleNamespace(functions=[checkout, fn("local", ["read file"], 0x2000)])
 hits = search.search_view(bv, ["purchase"], "")
 assert hits and hits[0].functions[0]["address"] == 0x1000
 debug_hits = search.search_view(bv, ["purchase", "file_activity"], "shop.example")

@@ -43,6 +43,19 @@ def _text(value: Any) -> str:
     return str(value)
 
 
+def _disassembly_line_text(line: Any) -> str:
+    """Normalize Binary Ninja DisassemblyTextLine and legacy tuple-like lines."""
+    text = getattr(line, "text", None)
+    if text is not None:
+        return _text(text)
+    tokens = getattr(line, "tokens", None)
+    if tokens is not None:
+        return " ".join(_text(getattr(token, "text", token)) for token in tokens)
+    if isinstance(line, (tuple, list)):
+        return " ".join(_text(part) for part in line)
+    return _text(line)
+
+
 def _function_evidence(function: Any) -> tuple[str, list[str]]:
     chunks: list[str] = []
     names: list[str] = []
@@ -55,7 +68,7 @@ def _function_evidence(function: Any) -> tuple[str, list[str]]:
         chunks.append(_text(getattr(string, "value", string)))
     for block in getattr(function, "basic_blocks", []) or []:
         for insn in getattr(block, "disassembly_text", []) or []:
-            chunks.append(" ".join(_text(x) for x in insn))
+            chunks.append(_disassembly_line_text(insn))
     return " ".join(chunks).lower(), names
 
 
